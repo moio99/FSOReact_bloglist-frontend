@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -12,6 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -63,6 +64,7 @@ const App = () => {
   const handleSaveBlog = ( newblogs, message, isError ) => {
     setBlogs(newblogs)
     showInfo(message, isError)
+    blogFormRef.current.toggleVisibility()
   }
 
   const loginForm = () => (
@@ -97,7 +99,7 @@ const App = () => {
         {user.name} logged in <button onClick={() => onLogout()}>logout</button>
       </div>
       <div>
-        <Togglable buttonLabel="new blog">
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm blogs={blogs} onSaveBlog={handleSaveBlog} />
         </Togglable>
       </div>
