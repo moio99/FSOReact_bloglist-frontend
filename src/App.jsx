@@ -110,8 +110,10 @@ const App = () => {
           <BlogForm blogs={blogs} onSaveBlog={handleSaveBlog} />
         </Togglable>
       </div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} onSaveBlog={handleSaveBlogLike} />
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} onSaveBlog={handleSaveBlogLike} />
       )}
     </>
   )
