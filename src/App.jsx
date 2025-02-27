@@ -67,6 +67,13 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
   }
 
+  const handleSaveBlogLike = ( newblog, message, isError ) => {
+    // Nom é necesario porque newblog nom é umha copia
+    // const newBlogs = blogs.map(b => (b.id === newblog.id ? newblog : b))
+    // setBlogs(newBlogs)
+    showInfo(message, isError)
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
@@ -104,7 +111,7 @@ const App = () => {
         </Togglable>
       </div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onSaveBlog={handleSaveBlogLike} />
       )}
     </>
   )
