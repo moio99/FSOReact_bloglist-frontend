@@ -12,9 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -63,80 +60,9 @@ const App = () => {
     }
   }
 
-  const handleTitleChange = (event) => {
-    const inputValue = event.target.value
-    setNewTitle(inputValue)
-  }
-
-  const handleAuthorChange = (event) => {
-    const inputValue = event.target.value
-    setNewAuthor(inputValue)
-  }
-  
-  const handleUrlChange = (event) => {
-    const inputValue = event.target.value
-    setNewUrl(inputValue)
-  }
-  const handleAddBlog = (event) => {
-    event.preventDefault()
-
-    const form = event.target
-    const inputTitle = form.querySelector("input[id='title']").value
-    const inputAuthor = form.querySelector("input[id='author']").value
-    const inputUrl = form.querySelector("input[id='url']").value
-    if (inputTitle.length > 0) {
-      const blog = blogs.find(blog => blog.title.toLocaleLowerCase() === inputTitle.toLocaleLowerCase())
-      if (blog) {
-        updateBlog(blog, inputAuthor, inputUrl)
-      } else {
-        addBlog(inputTitle, inputAuthor, inputUrl)
-      }
-    }
-  }
-
-  const updateBlog = (blog, inputAuthor, inputUrl) => { 
-    const confirmText = `The title "${blog.title}" is already added to the blog list, update the old values author: "${blog.author}" url: "${blog.url}"?` 
-    if (window.confirm(confirmText)) {
-      const updateBlog = {title: blog.title, author: inputAuthor, url: inputUrl, likes: blog.likes}
-      blogService.update(blog.id, updateBlog)
-        .then(response => {
-          console.log('update', response.data)
-          setBlogs(blogs.map(b => (b.id === blog.id ? response.data : b)))
-          setNewTitle('')
-          setNewAuthor('')
-          setNewUrl('')
-          showInfo(`Updated blog: "${response.data.title}"!`)
-        })
-        .catch(error => { 
-          console.log('UpdateError', error.response.data.error)
-          if (error.response.status === 400) {
-            showInfo(error.response.data.error, true) 
-          } else {
-            showInfo(`Error on update "${blog.title}"`, true) 
-          }
-        })
-    }
-  }
-
-  const addBlog = (inputTitle, inputAuthor, inputUrl) => { 
-    const newBlog = {title: inputTitle, author: inputAuthor, url: inputUrl}
-    blogService.create(newBlog)
-      .then(response => {
-        console.log('create', response.data)
-        setBlogs(blogs.concat(response.data))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-        showInfo(`Added blog title: "${response.data.title}"!`)
-      })
-      .catch(error => {
-        console.log('CreateError', error.response.data.error)
-        if (error.response.status === 400) {
-          showInfo(error.response.data.error, true) 
-        } else {
-          showInfo(`Error on create ""${blog.title}"`, true)
-        }
-      })
+  const handleSaveBlog = ( newblogs, message, isError ) => {
+    setBlogs(newblogs)
+    showInfo(message, isError)
   }
 
   const loginForm = () => (
@@ -172,10 +98,7 @@ const App = () => {
       </div>
       <div>
         <Togglable buttonLabel="new blog">
-          <BlogForm
-            newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl}
-            onAddBlog={handleAddBlog} 
-            onTitleChange={handleTitleChange} onAuthorChange={handleAuthorChange} onUrlChange={handleUrlChange} />
+          <BlogForm blogs={blogs} onSaveBlog={handleSaveBlog} />
         </Togglable>
       </div>
       {blogs.map(blog =>
