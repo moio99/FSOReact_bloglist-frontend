@@ -10,10 +10,10 @@ const notificationStyle = {
 
 const notificationInfoStyle = (error) => {
   if (error) {
-    return {...notificationStyle, color: 'red'}
+    return { ...notificationStyle, color: 'red' }
   }
   else {
-    return {...notificationStyle, color: 'green'}
+    return { ...notificationStyle, color: 'green' }
   }
 }
 

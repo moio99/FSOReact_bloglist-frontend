@@ -5,7 +5,7 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  
+
   const handleTitleChange = (event) => {
     const inputValue = event.target.value
     setNewTitle(inputValue)
@@ -15,7 +15,7 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
     const inputValue = event.target.value
     setNewAuthor(inputValue)
   }
-  
+
   const handleUrlChange = (event) => {
     const inputValue = event.target.value
     setNewUrl(inputValue)
@@ -25,9 +25,9 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
     event.preventDefault()
 
     const form = event.target
-    const inputTitle = form.querySelector("input[id='title']").value
-    const inputAuthor = form.querySelector("input[id='author']").value
-    const inputUrl = form.querySelector("input[id='url']").value
+    const inputTitle = form.querySelector('input[id="title"]').value
+    const inputAuthor = form.querySelector('input[id="author"]').value
+    const inputUrl = form.querySelector('input[id="url"]').value
     if (inputTitle.length > 0) {
       const blog = blogs.find(blog => blog.title.toLocaleLowerCase() === inputTitle.toLocaleLowerCase())
       if (blog) {
@@ -38,21 +38,21 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
     }
   }
 
-  const updateBlog = (blog, inputAuthor, inputUrl) => { 
-    const confirmText = `The title "${blog.title}" is already added to the blog list, update the old values author: "${blog.author}" url: "${blog.url}"?` 
+  const updateBlog = (blog, inputAuthor, inputUrl) => {
+    const confirmText = `The title "${blog.title}" is already added to the blog list, update the old values author: "${blog.author}" url: "${blog.url}"?`
     if (window.confirm(confirmText)) {
-      const updateBlog = {title: blog.title, author: inputAuthor, url: inputUrl, likes: blog.likes, user: user}
+      const updateBlog = { title: blog.title, author: inputAuthor, url: inputUrl, likes: blog.likes, user: user }
       blogService.update(blog.id, updateBlog)
         .then(response => {
           console.log('update', response.data)
           setNewTitle('')
           setNewAuthor('')
           setNewUrl('')
-          const changedBlogs = blogs.map(b => (b.id === blog.id 
+          const changedBlogs = blogs.map(b => (b.id === blog.id
             ? { ...b, author: inputAuthor, url: inputUrl, likes: blog.likes } : b))
           onSaveBlog(changedBlogs, `Updated blog: "${response.data.title}"!`, false)
         })
-        .catch(error => { 
+        .catch(error => {
           console.log('UpdateError', error.response.data.error)
           if (error.response.status === 400) {
             onSaveBlog(blogs, error.response.data.error, true)
@@ -63,8 +63,8 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
     }
   }
 
-  const addBlog = (inputTitle, inputAuthor, inputUrl) => { 
-    const newBlog = {title: inputTitle, author: inputAuthor, url: inputUrl, user: user}
+  const addBlog = (inputTitle, inputAuthor, inputUrl) => {
+    const newBlog = { title: inputTitle, author: inputAuthor, url: inputUrl, user: user }
     blogService.create(newBlog)
       .then(response => {
         console.log('create', response.data)

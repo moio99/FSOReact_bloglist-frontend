@@ -8,7 +8,7 @@ const getBaseURL = () => {
   if (mode === 'development') {
     return devUrl + baseUrl
   }
-  return baseUrl  
+  return baseUrl
 }
 
 const setToken = newToken => {

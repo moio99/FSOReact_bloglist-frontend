@@ -8,16 +8,16 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [actionInfo, setActionInfo] = useState({text: '', error: false})
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [actionInfo, setActionInfo] = useState({ text: '', error: false })
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const App = () => {
     const newActionInfo = { text: info, error: error ? true : false  }
     setActionInfo(newActionInfo)
     setTimeout(() => {
-      setActionInfo({text: '', error: false})
+      setActionInfo({ text: '', error: false })
     }, 5000)
   }
 
@@ -44,7 +44,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       await loginService.login({
         username, password,
@@ -87,24 +87,24 @@ const App = () => {
       <h2>log in to application</h2>
       <div>
         username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const blogForm = () => (
@@ -123,7 +123,7 @@ const App = () => {
         .map(blog =>
           <Blog key={blog.id} blog={blog} user={user}
             onChangeLikesBlog={handleSaveBlogLike} onRemoveBlog={handleRemoveBlog} />
-      )}
+        )}
     </>
   )
 

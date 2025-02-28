@@ -18,7 +18,7 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
         console.log('update', response.data)
         onChangeLikesBlog(blog, `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`, false)
       })
-      .catch(error => { 
+      .catch(error => {
         console.log('UpdateError', error.response.data.error)
         if (error.response.status === 400) {
           onChangeLikesBlog(blog, error.response.data.error, true)
@@ -35,7 +35,7 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
           console.log('delete', blog.title)
           onRemoveBlog(blog.id, `delete blog: "${blog.title}"!`, false)
         })
-        .catch(error => { 
+        .catch(error => {
           console.log('DeleteError', error.response.data.error)
           if (error.response.status === 400) {
             onRemoveBlog(blog.id, error.response.data.error, true)
@@ -57,9 +57,9 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   return (
     <div style={blogStyle}>
       <p>
-        {blog.title} {blog.author} 
-          <button style={hideWhenVisible} onClick={() => handleToggleVisibility()}>view</button>
-          <button style={showWhenVisible} onClick={() => handleToggleVisibility()}>hide</button>
+        {blog.title} {blog.author}
+        <button style={hideWhenVisible} onClick={() => handleToggleVisibility()}>view</button>
+        <button style={showWhenVisible} onClick={() => handleToggleVisibility()}>hide</button>
       </p>
       <div style={showWhenVisible}>
         <p>url: {blog.url}</p>
