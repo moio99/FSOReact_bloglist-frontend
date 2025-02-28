@@ -57,11 +57,11 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   return (
     <div style={blogStyle}>
       <p>
-        {blog.title} {blog.author}
+        <span>{blog.title}</span> <span>{blog.author}</span>
         <button style={hideWhenVisible} onClick={() => handleToggleVisibility()}>view</button>
         <button style={showWhenVisible} onClick={() => handleToggleVisibility()}>hide</button>
       </p>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} id='moreInfo'>
         <p>url: {blog.url}</p>
         <p>likes: {blog.likes} <button onClick={() => handleIncrementLikes()}>like</button></p>
         <p>author: {blog.author}</p>
