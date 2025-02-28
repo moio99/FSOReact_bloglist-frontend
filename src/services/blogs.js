@@ -36,4 +36,12 @@ const update = (id, blog) => {
   return axios.put(`${getBaseURL()}/${id}`, blog, config)
 }
 
-export default { getAll, setToken, create, update }
+const deleteById = (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  return axios.delete(`${getBaseURL()}/${id}`, config)
+}
+
+export default { getAll, setToken, create, update, deleteById }

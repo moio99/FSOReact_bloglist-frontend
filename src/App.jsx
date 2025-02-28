@@ -61,16 +61,24 @@ const App = () => {
     }
   }
 
-  const handleSaveBlog = ( newblogs, message, isError ) => {
-    setBlogs(newblogs)
+  const handleSaveBlog = ( changedBlogs, message, isError ) => {
+    setBlogs(changedBlogs)
     showInfo(message, isError)
-    blogFormRef.current.toggleVisibility()
+    if (!isError) {
+      blogFormRef.current.toggleVisibility()
+    }
   }
 
   const handleSaveBlogLike = ( newblog, message, isError ) => {
     // Nom é necesario porque newblog nom é umha copia
     // const newBlogs = blogs.map(b => (b.id === newblog.id ? newblog : b))
     // setBlogs(newBlogs)
+    showInfo(message, isError)
+  }
+
+  const handleRemoveBlog = ( idBlog, message, isError ) => {
+    const newBlogs = blogs.filter(b => b.id !== idBlog)
+    setBlogs(newBlogs)
     showInfo(message, isError)
   }
 
@@ -107,13 +115,14 @@ const App = () => {
       </div>
       <div>
         <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <BlogForm blogs={blogs} onSaveBlog={handleSaveBlog} />
+          <BlogForm blogs={blogs} user={user} onSaveBlog={handleSaveBlog} />
         </Togglable>
       </div>
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog =>
-          <Blog key={blog.id} blog={blog} onSaveBlog={handleSaveBlogLike} />
+          <Blog key={blog.id} blog={blog} user={user}
+            onChangeLikesBlog={handleSaveBlogLike} onRemoveBlog={handleRemoveBlog} />
       )}
     </>
   )

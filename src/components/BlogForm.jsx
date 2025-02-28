@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const BlogForm = ( { blogs, onSaveBlog } ) => {
+const BlogForm = ( { blogs, user, onSaveBlog } ) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -41,15 +41,16 @@ const BlogForm = ( { blogs, onSaveBlog } ) => {
   const updateBlog = (blog, inputAuthor, inputUrl) => { 
     const confirmText = `The title "${blog.title}" is already added to the blog list, update the old values author: "${blog.author}" url: "${blog.url}"?` 
     if (window.confirm(confirmText)) {
-      const updateBlog = {title: blog.title, author: inputAuthor, url: inputUrl, likes: blog.likes}
+      const updateBlog = {title: blog.title, author: inputAuthor, url: inputUrl, likes: blog.likes, user: user}
       blogService.update(blog.id, updateBlog)
         .then(response => {
           console.log('update', response.data)
           setNewTitle('')
           setNewAuthor('')
           setNewUrl('')
-          const newBlogs = blogs.map(b => (b.id === blog.id ? response.data : b))
-          onSaveBlog(newBlogs, `Updated blog: "${response.data.title}"!`, false)
+          const changedBlogs = blogs.map(b => (b.id === blog.id 
+            ? { ...b, author: inputAuthor, url: inputUrl, likes: blog.likes } : b))
+          onSaveBlog(changedBlogs, `Updated blog: "${response.data.title}"!`, false)
         })
         .catch(error => { 
           console.log('UpdateError', error.response.data.error)
@@ -63,22 +64,22 @@ const BlogForm = ( { blogs, onSaveBlog } ) => {
   }
 
   const addBlog = (inputTitle, inputAuthor, inputUrl) => { 
-    const newBlog = {title: inputTitle, author: inputAuthor, url: inputUrl}
+    const newBlog = {title: inputTitle, author: inputAuthor, url: inputUrl, user: user}
     blogService.create(newBlog)
       .then(response => {
         console.log('create', response.data)
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
-        const newBlogs = blogs.concat(response.data)
-        onSaveBlog(newBlogs, `Added blog title: "${response.data.title}"!`, false)
+        const changedBlogs = blogs.concat(response.data)
+        onSaveBlog(changedBlogs, `Added blog title: "${response.data.title}"!`, false)
       })
       .catch(error => {
         console.log('CreateError', error.response.data.error)
         if (error.response.status === 400) {
           onSaveBlog(blogs, error.response.data.error, true)
         } else {
-          onSaveBlog(blogs, `Error on create ""${blog.title}"`, true)
+          onSaveBlog(blogs, `Error on create ""${newBlog.title}"`, true)
         }
       })
   }
