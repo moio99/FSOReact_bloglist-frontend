@@ -58,8 +58,8 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
     <div style={blogStyle}>
       <p>
         <span>{blog.title}</span> <span>{blog.author}</span>
-        <button style={hideWhenVisible} onClick={() => handleToggleVisibility()}>view</button>
-        <button style={showWhenVisible} onClick={() => handleToggleVisibility()}>hide</button>
+        <button style={hideWhenVisible} className='view-hide' onClick={() => handleToggleVisibility()}>view</button>
+        <button style={showWhenVisible} className='view-hide' onClick={() => handleToggleVisibility()}>hide</button>
       </p>
       <div style={showWhenVisible} id='moreInfo'>
         <p>url: {blog.url}</p>
