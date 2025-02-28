@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 
-test('renders title and author but not url and likes', () => {
+test('renders title and author but not show url and likes', () => {
   const mockOnSaveBlog = vi.fn()
 
   const user = { username: 'usuario01', name: 'Iago Outeiro', id: '67bde4cb877200d147cefb1a' }
