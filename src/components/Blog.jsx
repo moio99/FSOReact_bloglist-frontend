@@ -33,7 +33,7 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
       blogService.deleteById(blog.id)
         .then(() => {
           console.log('delete', blog.title)
-          onRemoveBlog(blog.id, `delete blog: "${blog.title}"!`, false)
+          onRemoveBlog(blog.id, `Deleted blog: "${blog.title}"!`, false)
         })
         .catch(error => {
           console.log('DeleteError', error.response.data.error)

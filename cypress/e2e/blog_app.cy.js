@@ -2,12 +2,10 @@ describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)   // antes con http://localhost:3003/api
 
-    const user = {
-      name: 'test name',
-      username: 'testUser',
-      password: 'testPass'
-    }
+    const user = { name: 'test name', username: 'testUser', password: 'testPass' }
     cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)  // antes con http://localhost:3003/api
+    const userB = { name: 'test name B', username: 'testUserB', password: 'testPassB' }
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, userB)  // antes con http://localhost:3003/api
 
     cy.visit('')  // antes http://localhost:5173
   })
@@ -66,6 +64,21 @@ describe('Blog app', function() {
         cy.contains('like').click()
         cy.contains('likes: 1')
         cy.contains('Updated likes blog: "test title" likes 1!').should('have.css', 'color', 'rgb(0, 128, 0)')
+      })
+      
+      it('it can be change delete', function () {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.contains('Deleted blog: "test title"!').should('have.css', 'color', 'rgb(0, 128, 0)')
+      })
+      
+      it('only blog creator can delete', function () {
+        cy.contains('logout').click()
+        .then(() => {
+          cy.login({ username: 'testUserB', password: 'testPassB' })
+          cy.contains('view').click()
+          cy.contains('remove').should('not.exist')
+        })
       })
     })
   })
