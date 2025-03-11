@@ -53,7 +53,7 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
           onSaveBlog(changedBlogs, `Updated blog: "${response.data.title}"!`, false)
         })
         .catch(error => {
-          console.log('UpdateError', error.response.data.error)
+          console.log('UpdateError', error.response)
           if (error.response.status === 400) {
             onSaveBlog(blogs, error.response.data.error, true)
           } else {
@@ -75,7 +75,7 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
         onSaveBlog(changedBlogs, `Added blog title: "${response.data.title}"!`, false)
       })
       .catch(error => {
-        console.log('CreateError', error.response.data.error)
+        console.log('CreateError', error.response)
         if (error.response.status === 400) {
           onSaveBlog(blogs, error.response.data.error, true)
         } else {
@@ -87,16 +87,16 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
   return (
     <form onSubmit={handleAddBlog}>
       <div>
-        title: <input id='title' value={newTitle} onChange={handleTitleChange} />
+        title: <input type="text" id='title' value={newTitle} data-testid='testTitle' onChange={handleTitleChange} />
       </div>
       <div>
-        author: <input id='author' value={newAuthor} onChange={handleAuthorChange} />
+        author: <input type="text" id='author' value={newAuthor} data-testid='testAuthor' onChange={handleAuthorChange} />
       </div>
       <div>
-        url: <input id='url' value={newUrl} onChange={handleUrlChange} />
+        url: <input type="text" id='url' value={newUrl} data-testid='testUrl' onChange={handleUrlChange} />
       </div>
       <div>
-        <button type='submit' value={newUrl}>create</button>
+        <button type='submit' data-testid='testCreate'>create</button>
       </div>
     </form>
   )
