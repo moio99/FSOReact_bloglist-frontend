@@ -87,16 +87,16 @@ const BlogForm = ( { blogs, user, onSaveBlog } ) => {
   return (
     <form onSubmit={handleAddBlog}>
       <div>
-        title: <input type="text" id='title' value={newTitle} data-testid='testTitle' onChange={handleTitleChange} />
+        title: <input type="text" id='title' value={newTitle} onChange={handleTitleChange} />
       </div>
       <div>
-        author: <input type="text" id='author' value={newAuthor} data-testid='testAuthor' onChange={handleAuthorChange} />
+        author: <input type="text" id='author' value={newAuthor} onChange={handleAuthorChange} />
       </div>
       <div>
-        url: <input type="text" id='url' value={newUrl} data-testid='testUrl' onChange={handleUrlChange} />
+        url: <input type="text" id='url' value={newUrl} onChange={handleUrlChange} />
       </div>
       <div>
-        <button type='submit' data-testid='testCreate'>create</button>
+        <button type='submit' id='testCreate'>create</button>
       </div>
     </form>
   )
