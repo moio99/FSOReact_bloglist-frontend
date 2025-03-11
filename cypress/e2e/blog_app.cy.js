@@ -40,9 +40,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('testUser')
-      cy.get('#password').type('testPass')
-      cy.get('#login-button').click()
+      cy.login({ username: 'testUser', password: 'testPass' })
     })
 
     it('A blog can be created', function() {
@@ -52,6 +50,23 @@ describe('Blog app', function() {
       cy.get('#url').type('test url')
       cy.get('#testCreate').click()
       cy.contains('Added blog title: "test title"!')
+    })
+    
+    describe('Blogs Management', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'test title',
+          author: 'test author',
+          url: 'test url'
+        })
+      })
+
+      it('it can be change likes count', function () {
+        cy.contains('view').click()
+        cy.contains('like').click()
+        cy.contains('likes: 1')
+        cy.contains('Updated likes blog: "test title" likes 1!').should('have.css', 'color', 'rgb(0, 128, 0)')
+      })
     })
   })
 })

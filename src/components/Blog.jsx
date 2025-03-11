@@ -16,7 +16,7 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
     blogService.update(blog.id, blog)
       .then(response => {
         console.log('update', response.data)
-        onChangeLikesBlog(blog, `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`, false)
+        onChangeLikesBlog(blog, `Updated likes blog: "${response.data.title}" likes ${response.data.likes}!`, false)
       })
       .catch(error => {
         console.log('UpdateError', error.response.data.error)
