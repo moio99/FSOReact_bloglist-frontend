@@ -43,19 +43,17 @@ describe('Blog app', function() {
 
     it('A blog can be created', function() {
       cy.get('#buttonNewBlog').click()
-      cy.get('#title').type('test title')
-      cy.get('#author').type('test author')
-      cy.get('#url').type('test url')
+      cy.get('#title').type('test title 1')
+      cy.get('#author').type('test author 1')
+      cy.get('#url').type('test url 1')
       cy.get('#testCreate').click()
-      cy.contains('Added blog title: "test title"!')
+      cy.contains('Added blog title: "test title 1"!')
     })
     
     describe('Blogs Management', function() {
       beforeEach(function() {
         cy.createBlog({
-          title: 'test title',
-          author: 'test author',
-          url: 'test url'
+          title: 'test title 1', author: 'test author 1', url: 'test url 1', likes: 0
         })
       })
 
@@ -63,22 +61,28 @@ describe('Blog app', function() {
         cy.contains('view').click()
         cy.contains('like').click()
         cy.contains('likes: 1')
-        cy.contains('Updated likes blog: "test title" likes 1!').should('have.css', 'color', 'rgb(0, 128, 0)')
+        cy.contains('Updated likes blog: "test title 1" likes 1!').should('have.css', 'color', 'rgb(0, 128, 0)')
       })
       
       it('it can be change delete', function () {
         cy.contains('view').click()
         cy.contains('remove').click()
-        cy.contains('Deleted blog: "test title"!').should('have.css', 'color', 'rgb(0, 128, 0)')
+        cy.contains('Deleted blog: "test title 1"!').should('have.css', 'color', 'rgb(0, 128, 0)')
       })
       
       it('only blog creator can delete', function () {
         cy.contains('logout').click()
-        .then(() => {
-          cy.login({ username: 'testUserB', password: 'testPassB' })
-          cy.contains('view').click()
-          cy.contains('remove').should('not.exist')
+        cy.login({ username: 'testUserB', password: 'testPassB' })
+        cy.contains('view').click()
+        cy.contains('remove').should('not.exist')
+      })
+      
+      it('blogs are ordered by likes', function () {
+        cy.createBlog({
+          title: 'test title 2', author: 'test author 2', url: 'test url 2', likes: 20
         })
+        cy.get('.blog').eq(0).should('contain', 'test title 2')
+        cy.get('.blog').eq(1).should('contain', 'test title 1')
       })
     })
   })
