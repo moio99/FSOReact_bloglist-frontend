@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux'
+
 const notificationStyle = {
   fontStyle: 'italic',
   fontSize: 16,
@@ -16,11 +18,15 @@ const notificationInfoStyle = (error) => {
   }
 }
 
-const NotificationInfo = (notification) => {
-  if (notification.values.text !== '') {
+const NotificationInfo = () => {
+
+  // Quando cambia state.notification notification tem um novo valor, isto faz que se rederice de novo
+  const notification = useSelector(state => state.notification)
+
+  if (notification.text !== '') {
     return (
-      <div style={notificationInfoStyle(notification.values.error)}>
-        {notification.values.text}
+      <div style={notificationInfoStyle(notification.error)}>
+        {notification.text}
       </div>
     )
   }

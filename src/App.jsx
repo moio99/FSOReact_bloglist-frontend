@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { setNotificationText } from './reducers/notificationReducer'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -7,8 +9,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
-  const [actionInfo, setActionInfo] = useState({ text: '', error: false })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -29,9 +31,9 @@ const App = () => {
 
   const showInfo = (info, error) => {
     const newActionInfo = { text: info, error: error ? true : false }
-    setActionInfo(newActionInfo)
+    dispatch(setNotificationText(newActionInfo, 5))
     setTimeout(() => {
-      setActionInfo({ text: '', error: false })
+      dispatch(setNotificationText({ text: '', error: false }, 5))
     }, 5000)
   }
 
@@ -137,7 +139,7 @@ const App = () => {
 
   return (
     <div>
-      <NotificationInfo values={actionInfo} />
+      <NotificationInfo />
 
       {user === null && loginForm()}
       {user !== null && blogForm()}

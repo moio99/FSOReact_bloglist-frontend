@@ -70,8 +70,8 @@ const BlogForm = ({ blogs, user, onSaveBlog }) => {
           )
         })
         .catch((error) => {
-          console.log('UpdateError', error.response)
-          if (error.response.status === 400) {
+          console.log('UpdateError', error)
+          if (error.response && error.response.status === 400) {
             onSaveBlog(blogs, error.response.data.error, true)
           } else {
             onSaveBlog(blogs, `Error on update "${blog.title}"`, true)
@@ -102,8 +102,8 @@ const BlogForm = ({ blogs, user, onSaveBlog }) => {
         )
       })
       .catch((error) => {
-        console.log('CreateError', error.response)
-        if (error.response.status === 400) {
+        console.log('CreateError', error)
+        if (error.response && error.response.status === 400) {
           onSaveBlog(blogs, error.response.data.error, true)
         } else {
           onSaveBlog(blogs, `Error on create ""${newBlog.title}"`, true)

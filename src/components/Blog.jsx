@@ -24,8 +24,8 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
         )
       })
       .catch((error) => {
-        console.log('UpdateError', error.response.data.error)
-        if (error.response.status === 400) {
+        console.log('UpdateError', error)
+        if (error && error.response && error.response.status === 400 && error.response.data) {
           onChangeLikesBlog(blog, error.response.data.error, true)
         } else {
           onChangeLikesBlog(
@@ -46,8 +46,8 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
           onRemoveBlog(blog.id, `delete blog: "${blog.title}"!`, false)
         })
         .catch((error) => {
-          console.log('DeleteError', error.response.data.error)
-          if (error.response.status === 400) {
+          console.log('DeleteError', error)
+          if (error && error.response && error.response.status === 400 && error.response.data) {
             onRemoveBlog(blog.id, error.response.data.error, true)
           } else {
             onRemoveBlog(blog.id, `Error on delete blog: "${blog.title}"`, true)
