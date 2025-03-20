@@ -15,9 +15,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const App = () => {
   }, [])
 
   const showInfo = (info, error) => {
-    const newActionInfo = { text: info, error: error ? true : false  }
+    const newActionInfo = { text: info, error: error ? true : false }
     setActionInfo(newActionInfo)
     setTimeout(() => {
       setActionInfo({ text: '', error: false })
@@ -46,14 +44,17 @@ const App = () => {
     event.preventDefault()
 
     try {
-      await loginService.login({
-        username, password,
-      }).then(user => {
-        blogService.setToken(user.token)
-        setUser(user)
-        window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-        showInfo(`User "${user.name}" is logged in`)
-      })
+      await loginService
+        .login({
+          username,
+          password,
+        })
+        .then((user) => {
+          blogService.setToken(user.token)
+          setUser(user)
+          window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+          showInfo(`User "${user.name}" is logged in`)
+        })
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -61,7 +62,7 @@ const App = () => {
     }
   }
 
-  const handleSaveBlog = ( changedBlogs, message, isError ) => {
+  const handleSaveBlog = (changedBlogs, message, isError) => {
     setBlogs(changedBlogs)
     showInfo(message, isError)
     if (!isError) {
@@ -69,15 +70,15 @@ const App = () => {
     }
   }
 
-  const handleSaveBlogLike = ( newblog, message, isError ) => {
+  const handleSaveBlogLike = (newblog, message, isError) => {
     // Nom é necesario porque newblog nom é umha copia
     // const newBlogs = blogs.map(b => (b.id === newblog.id ? newblog : b))
     // setBlogs(newBlogs)
     showInfo(message, isError)
   }
 
-  const handleRemoveBlog = ( idBlog, message, isError ) => {
-    const newBlogs = blogs.filter(b => b.id !== idBlog)
+  const handleRemoveBlog = (idBlog, message, isError) => {
+    const newBlogs = blogs.filter((b) => b.id !== idBlog)
     setBlogs(newBlogs)
     showInfo(message, isError)
   }
@@ -87,13 +88,21 @@ const App = () => {
       <h2>log in to application</h2>
       <div>
         username
-        <input type="text" value={username} name="Username" data-testid='username'
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          data-testid="username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         password
-        <input type="password" value={password} name="Password" data-testid='password'
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          data-testid="password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
@@ -114,10 +123,15 @@ const App = () => {
       </div>
       {blogs
         .sort((a, b) => b.likes - a.likes)
-        .map(blog =>
-          <Blog key={blog.id} blog={blog} user={user}
-            onChangeLikesBlog={handleSaveBlogLike} onRemoveBlog={handleRemoveBlog} />
-        )}
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user}
+            onChangeLikesBlog={handleSaveBlogLike}
+            onRemoveBlog={handleRemoveBlog}
+          />
+        ))}
     </>
   )
 

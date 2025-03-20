@@ -7,8 +7,12 @@ import blogService from '../services/blogs'
 vi.mock('../services/blogs', () => ({
   default: {
     update: vi.fn().mockResolvedValue({ data: { likes: 4 } }),
-    create: vi.fn().mockResolvedValue({ data: { title: 'Título test', author: 'Author test', url: 'Url test' } }),
-  }
+    create: vi
+      .fn()
+      .mockResolvedValue({
+        data: { title: 'Título test', author: 'Author test', url: 'Url test' },
+      }),
+  },
 }))
 
 beforeEach(() => {
@@ -18,10 +22,22 @@ beforeEach(() => {
 test('renders title and author but not show url and likes', () => {
   const mockOnSaveBlog = vi.fn()
 
-  const user = { username: 'usuario01', name: 'Iago Outeiro', id: '67bde4cb877200d147cefb1a' }
-  const blog = { title: 'Título 01', author: 'Nome do autor', url: 'http://example.com', likes: 3, user: user }
+  const user = {
+    username: 'usuario01',
+    name: 'Iago Outeiro',
+    id: '67bde4cb877200d147cefb1a',
+  }
+  const blog = {
+    title: 'Título 01',
+    author: 'Nome do autor',
+    url: 'http://example.com',
+    likes: 3,
+    user: user,
+  }
 
-  const { container } = render(<Blog blog={blog} user={user} onSaveBlog={mockOnSaveBlog} />)
+  const { container } = render(
+    <Blog blog={blog} user={user} onSaveBlog={mockOnSaveBlog} />
+  )
 
   const elementTitle = screen.getByText('Título 01')
   const elementAuthor = screen.getByText('Nome do autor')
@@ -35,10 +51,22 @@ test('renders title and author but not show url and likes', () => {
 test('shows url and likes when the view button is clicked', async () => {
   const mockOnSaveBlog = vi.fn()
 
-  const user = { username: 'usuario01', name: 'Iago Outeiro', id: '67bde4cb877200d147cefb1a' }
-  const blog = { title: 'Título 01', author: 'Nome do autor', url: 'http://example.com', likes: 3, user: user }
+  const user = {
+    username: 'usuario01',
+    name: 'Iago Outeiro',
+    id: '67bde4cb877200d147cefb1a',
+  }
+  const blog = {
+    title: 'Título 01',
+    author: 'Nome do autor',
+    url: 'http://example.com',
+    likes: 3,
+    user: user,
+  }
 
-  const { container } = render(<Blog blog={blog} user={user} onSaveBlog={mockOnSaveBlog} />)
+  const { container } = render(
+    <Blog blog={blog} user={user} onSaveBlog={mockOnSaveBlog} />
+  )
 
   const userEventSetup = userEvent.setup()
   const viewButton = container.querySelector('.view-hide')
@@ -51,9 +79,17 @@ test('shows url and likes when the view button is clicked', async () => {
 test('calls onChangeLikesBlog twice when like button is clicked twice', async () => {
   const mockOnChangeLikesBlog = vi.fn()
   const user = { id: '67bde4cb877200d147cefb1a' }
-  const blog = { title: 'Título 01', author: 'Nome do autor', url: 'http://example.com', likes: 3, user: user }
+  const blog = {
+    title: 'Título 01',
+    author: 'Nome do autor',
+    url: 'http://example.com',
+    likes: 3,
+    user: user,
+  }
 
-  render(<Blog blog={blog} user={user} onChangeLikesBlog={mockOnChangeLikesBlog} />)
+  render(
+    <Blog blog={blog} user={user} onChangeLikesBlog={mockOnChangeLikesBlog} />
+  )
 
   const userEventInstance = userEvent.setup()
   const likeButton = screen.getByText('like')
@@ -67,11 +103,22 @@ test('calls onChangeLikesBlog twice when like button is clicked twice', async ()
 test('<BlogForm /> updates parent state and calls onSubmit', async () => {
   const newBlog = vi.fn()
   const user = userEvent.setup()
-  const blog = { title: 'Título 01', author: 'Nome do autor', url: 'http://example.com', likes: 3,
-    user: { id: '67bde4cb877200d147cefb1a' } }
-  const blogs = [ blog ]
+  const blog = {
+    title: 'Título 01',
+    author: 'Nome do autor',
+    url: 'http://example.com',
+    likes: 3,
+    user: { id: '67bde4cb877200d147cefb1a' },
+  }
+  const blogs = [blog]
 
-  const { container } = render(<BlogForm blogs={blogs} user={{ username: 'usuario01' }} onSaveBlog={newBlog} />)
+  const { container } = render(
+    <BlogForm
+      blogs={blogs}
+      user={{ username: 'usuario01' }}
+      onSaveBlog={newBlog}
+    />
+  )
 
   const titleInput = container.querySelector('#title')
   const authorInput = container.querySelector('#author')
@@ -90,8 +137,8 @@ test('<BlogForm /> updates parent state and calls onSubmit', async () => {
       expect.objectContaining({
         title: 'Título test',
         author: 'Author test',
-        url: 'Url test'
-      })
+        url: 'Url test',
+      }),
     ]),
     expect.any(String),
     expect.any(Boolean)

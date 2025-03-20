@@ -10,7 +10,7 @@ const getBaseURL = () => {
   return baseUrl
 }
 
-const login = async credentials => {
+const login = async (credentials) => {
   const response = await axios.post(getBaseURL(), credentials)
   return response.data
 }

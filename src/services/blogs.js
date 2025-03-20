@@ -11,13 +11,13 @@ const getBaseURL = () => {
   return baseUrl
 }
 
-const setToken = newToken => {
+const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
 const getAll = () => {
   const request = axios.get(getBaseURL())
-  return request.then(response => response.data)
+  return request.then((response) => response.data)
 }
 
 const create = (blog) => {

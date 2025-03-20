@@ -5,14 +5,13 @@ const notificationStyle = {
   padding: '10px',
   borderStyle: 'solid',
   borderRadius: '5px',
-  marginBottom: '10px'
+  marginBottom: '10px',
 }
 
 const notificationInfoStyle = (error) => {
   if (error) {
     return { ...notificationStyle, color: 'red' }
-  }
-  else {
+  } else {
     return { ...notificationStyle, color: 'green' }
   }
 }

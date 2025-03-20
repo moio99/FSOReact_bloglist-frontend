@@ -13,29 +13,39 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
 
   const handleIncrementLikes = () => {
     blog.likes = blog.likes + 1
-    blogService.update(blog.id, blog)
-      .then(response => {
+    blogService
+      .update(blog.id, blog)
+      .then((response) => {
         console.log('update', response.data)
-        onChangeLikesBlog(blog, `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`, false)
+        onChangeLikesBlog(
+          blog,
+          `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`,
+          false
+        )
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('UpdateError', error.response.data.error)
         if (error.response.status === 400) {
           onChangeLikesBlog(blog, error.response.data.error, true)
         } else {
-          onChangeLikesBlog(blog, `Error on update blog: "${blog.title}" likes ${blog.likes}`, true)
+          onChangeLikesBlog(
+            blog,
+            `Error on update blog: "${blog.title}" likes ${blog.likes}`,
+            true
+          )
         }
       })
   }
 
   const handleRemove = () => {
     if (window.confirm(`Remove blog ${blog.title}`)) {
-      blogService.deleteById(blog.id)
+      blogService
+        .deleteById(blog.id)
         .then(() => {
           console.log('delete', blog.title)
           onRemoveBlog(blog.id, `delete blog: "${blog.title}"!`, false)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('DeleteError', error.response.data.error)
           if (error.response.status === 400) {
             onRemoveBlog(blog.id, error.response.data.error, true)
@@ -51,22 +61,39 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
 
   return (
     <div style={blogStyle}>
       <p>
         <span>{blog.title}</span> <span>{blog.author}</span>
-        <button style={hideWhenVisible} className='view-hide' onClick={() => handleToggleVisibility()}>view</button>
-        <button style={showWhenVisible} className='view-hide' onClick={() => handleToggleVisibility()}>hide</button>
+        <button
+          style={hideWhenVisible}
+          className="view-hide"
+          onClick={() => handleToggleVisibility()}
+        >
+          view
+        </button>
+        <button
+          style={showWhenVisible}
+          className="view-hide"
+          onClick={() => handleToggleVisibility()}
+        >
+          hide
+        </button>
       </p>
-      <div style={showWhenVisible} id='moreInfo'>
+      <div style={showWhenVisible} id="moreInfo">
         <p>url: {blog.url}</p>
-        <p>likes: {blog.likes} <button onClick={() => handleIncrementLikes()}>like</button></p>
+        <p>
+          likes: {blog.likes}{' '}
+          <button onClick={() => handleIncrementLikes()}>like</button>
+        </p>
         <p>author: {blog.author}</p>
         {blog.user.id === user.id && (
-          <p><button onClick={() => handleRemove()}>remove</button></p>
+          <p>
+            <button onClick={() => handleRemove()}>remove</button>
+          </p>
         )}
       </div>
     </div>
