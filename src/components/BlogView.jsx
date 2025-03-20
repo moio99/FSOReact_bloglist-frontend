@@ -6,19 +6,18 @@ import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 import { clearUser } from '../reducers/userReducer'
+import { setBlogs, addBlog, updateBlog, deleteBlog } from '../reducers/blogsReducer'
 
 const BlogView = () => {
-  const [blogs, setBlogs] = useState([])
-
   const dispatch = useDispatch()
   const blogFormRef = useRef()
   const showInfo = useNotification()
-  const user = useSelector(state => {
-    return state.user
-  })
+  const user = useSelector(state => state.user)
+  const blogs = useSelector(state => state.blogs)
   
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
+  // }, [dispatch])  // Carregase ao chegar à páxina
   }, [])  // Carregase ao chegar à páxina
 
   const onLogout = () => {
@@ -27,7 +26,10 @@ const BlogView = () => {
   }
   
   const handleSaveBlog = (changedBlogs, message, isError) => {
-    setBlogs(changedBlogs)
+    // setBlogs(changedBlogs)
+    console.log('handleSaveBlog', changedBlogs)
+    dispatch(addBlog(changedBlogs))
+    console.log('handleSaveBlog2', changedBlogs)
     showInfo(message, isError)
     if (!isError) {
       blogFormRef.current.toggleVisibility()
@@ -37,13 +39,12 @@ const BlogView = () => {
   const handleSaveBlogLike = (newblog, message, isError) => {
     // Nom é necesario porque newblog nom é umha copia
     // const newBlogs = blogs.map(b => (b.id === newblog.id ? newblog : b))
-    // setBlogs(newBlogs)
+    // dispatch(updateBlog(newblog)) 
     showInfo(message, isError)
   }
   
   const handleRemoveBlog = (idBlog, message, isError) => {
-    const newBlogs = blogs.filter((b) => b.id !== idBlog)
-    setBlogs(newBlogs)
+    dispatch(deleteBlog(idBlog))
     showInfo(message, isError)
   }
   
@@ -59,6 +60,7 @@ const BlogView = () => {
         </Togglable>
       </div>
       {blogs
+        .slice()  // Copia a matriz antes de a ordear
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog

@@ -58,13 +58,8 @@ const BlogForm = ({ blogs, user, onSaveBlog }) => {
           setNewTitle('')
           setNewAuthor('')
           setNewUrl('')
-          const changedBlogs = blogs.map((b) =>
-            b.id === blog.id
-              ? { ...b, author: inputAuthor, url: inputUrl, likes: blog.likes }
-              : b
-          )
           onSaveBlog(
-            changedBlogs,
+            response.data,
             `Updated blog: "${response.data.title}"!`,
             false
           )
@@ -94,9 +89,8 @@ const BlogForm = ({ blogs, user, onSaveBlog }) => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
-        const changedBlogs = blogs.concat(response.data)
         onSaveBlog(
-          changedBlogs,
+          response.data,
           `Added blog title: "${response.data.title}"!`,
           false
         )

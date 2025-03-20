@@ -19,8 +19,9 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
       .then((response) => {
         console.log('update', response.data)
         setLikes(response.data.likes)
+        const responseBlog = { ...response.data, user: updatedBlog.user }
         onChangeLikesBlog(
-          response.data,
+          responseBlog,
           `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`,
           false
         )
