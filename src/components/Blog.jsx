@@ -3,6 +3,7 @@ import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   const [visible, setVisible] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -12,13 +13,14 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   }
 
   const handleIncrementLikes = () => {
-    blog.likes = blog.likes + 1
+    const updatedBlog = { ...blog, likes: likes + 1 } 
     blogService
-      .update(blog.id, blog)
+      .update(blog.id, updatedBlog)
       .then((response) => {
         console.log('update', response.data)
+        setLikes(response.data.likes)
         onChangeLikesBlog(
-          blog,
+          response.data,
           `Updated likes blog: "${response.data.likes}" likes ${response.data.likes}!`,
           false
         )
@@ -86,7 +88,7 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
       <div style={showWhenVisible} id="moreInfo">
         <p>url: {blog.url}</p>
         <p>
-          likes: {blog.likes}{' '}
+          likes: {likes}{' '}
           <button onClick={() => handleIncrementLikes()}>like</button>
         </p>
         <p>author: {blog.author}</p>
