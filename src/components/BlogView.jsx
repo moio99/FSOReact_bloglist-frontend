@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import blogService from '../services/blogs'
 import { useNotification } from '../hooks'
@@ -6,7 +6,7 @@ import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
 import { clearUser } from '../reducers/userReducer'
-import { setBlogs, addBlog, updateBlog, deleteBlog } from '../reducers/blogsReducer'
+import { setBlogs, addBlog, deleteBlog, updateBlog } from '../reducers/blogsReducer'
 
 const BlogView = () => {
   const dispatch = useDispatch()
@@ -14,19 +14,17 @@ const BlogView = () => {
   const showInfo = useNotification()
   const user = useSelector(state => state.user)
   const blogs = useSelector(state => state.blogs)
-  
+
   useEffect(() => {
     blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
-  // }, [dispatch])  // Carregase ao chegar à páxina
   }, [])  // Carregase ao chegar à páxina
 
   const onLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     dispatch(clearUser())
   }
-  
+
   const handleSaveBlog = (changedBlogs, message, isError) => {
-    // setBlogs(changedBlogs)
     console.log('handleSaveBlog', changedBlogs)
     dispatch(addBlog(changedBlogs))
     console.log('handleSaveBlog2', changedBlogs)
@@ -35,19 +33,17 @@ const BlogView = () => {
       blogFormRef.current.toggleVisibility()
     }
   }
-  
+
   const handleSaveBlogLike = (newblog, message, isError) => {
-    // Nom é necesario porque newblog nom é umha copia
-    // const newBlogs = blogs.map(b => (b.id === newblog.id ? newblog : b))
-    // dispatch(updateBlog(newblog)) 
+    dispatch(updateBlog(newblog))
     showInfo(message, isError)
   }
-  
+
   const handleRemoveBlog = (idBlog, message, isError) => {
     dispatch(deleteBlog(idBlog))
     showInfo(message, isError)
   }
-  
+
   return (
     <>
       <h2>blogs</h2>

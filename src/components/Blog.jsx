@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
+
+  const likes = useSelector(state =>
+    state.blogs.find(b => b.id === blog.id)?.likes || blog.likes
+  )
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -13,12 +17,11 @@ const Blog = ({ blog, user, onChangeLikesBlog, onRemoveBlog }) => {
   }
 
   const handleIncrementLikes = () => {
-    const updatedBlog = { ...blog, likes: likes + 1 } 
+    const updatedBlog = { ...blog, likes: likes + 1 }
     blogService
       .update(blog.id, updatedBlog)
       .then((response) => {
         console.log('update', response.data)
-        setLikes(response.data.likes)
         const responseBlog = { ...response.data, user: updatedBlog.user }
         onChangeLikesBlog(
           responseBlog,

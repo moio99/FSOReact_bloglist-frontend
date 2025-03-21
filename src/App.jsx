@@ -20,7 +20,7 @@ const App = () => {
       blogService.setToken(userCookie.token)
       dispatch(setUser(userCookie))
     }
-  }, [])  // Ao recarregar a página comproba a cookie
+  }, [])  // Só Ao recarregar a página comproba a cookie
 
   return (
     <div>

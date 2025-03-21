@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = [] 
+const initialState = []
 
 const blogsSlice = createSlice({
   name: 'blogs',
   initialState,
   reducers: {
     setBlogs(state, action) {
-      return action.payload 
+      return action.payload
     },
     addBlog(state, action) {
       console.log('addBlog', action.payload)
@@ -18,10 +18,10 @@ const blogsSlice = createSlice({
       return state.map(blog => (blog.id === updatedBlog.id ? updatedBlog : blog))
     },
     deleteBlog(state, action) {
-      return state.filter(blog => blog.id !== action.payload) 
+      return state.filter(blog => blog.id !== action.payload)
     },
     /* clearBlogs() {
-      return initialState 
+      return initialState
     } */
   }
 })
