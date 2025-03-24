@@ -5,8 +5,8 @@ import { useNotification } from '../hooks'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Togglable from './Togglable'
-import { clearUser } from '../reducers/userReducer'
 import { setBlogs, addBlog, deleteBlog, updateBlog } from '../reducers/blogsReducer'
+import { Link } from 'react-router-dom'
 
 const BlogView = () => {
   const dispatch = useDispatch()
@@ -19,15 +19,8 @@ const BlogView = () => {
     blogService.getAll().then((blogs) => dispatch(setBlogs(blogs)))
   }, [])  // Carregase ao chegar à páxina
 
-  const onLogout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
-    dispatch(clearUser())
-  }
-
   const handleSaveBlog = (changedBlogs, message, isError) => {
-    console.log('handleSaveBlog', changedBlogs)
     dispatch(addBlog(changedBlogs))
-    console.log('handleSaveBlog2', changedBlogs)
     showInfo(message, isError)
     if (!isError) {
       blogFormRef.current.toggleVisibility()
@@ -48,14 +41,11 @@ const BlogView = () => {
     <>
       <h2>blogs</h2>
       <div>
-        {user.name} logged in <button onClick={() => onLogout()}>logout</button>
-      </div>
-      <div>
         <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm blogs={blogs} user={user} onSaveBlog={handleSaveBlog} />
         </Togglable>
       </div>
-      {blogs
+      {/* {blogs
         .slice()  // Copia a matriz antes de a ordear
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
@@ -66,6 +56,14 @@ const BlogView = () => {
             onChangeLikesBlog={handleSaveBlogLike}
             onRemoveBlog={handleRemoveBlog}
           />
+        ))} */}
+      {blogs
+        .slice()  // Copia a matriz antes de a ordear
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <div key={blog.id}>
+            <Link to={`/blog/${blog.id}`}> {blog.title}</Link>
+          </div>
         ))}
     </>
   )
