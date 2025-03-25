@@ -1,5 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+const { v4: uuid } = require('uuid');
 
 let authors = [
   {
@@ -26,20 +27,6 @@ let authors = [
     id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
   },
 ]
-
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
- *
- * Spanish:
- * Podría tener más sentido asociar un libro con su autor almacenando la id del autor en el contexto del libro en lugar del nombre del autor
- * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conexión con el libro
-*/
 
 let books = [
   {
@@ -93,24 +80,129 @@ let books = [
   },
 ]
 
-/*
-  you can remove the placeholder query once your first one has been implemented 
-*/
-
 const typeDefs = `
   type Query {
     bookCount: Int!
     authorCount: Int!
+    allAuthors: [Author!]!
+    allBooks(title: String, genre: [String], author: String, published: Int): [Book!]!
+  }
+
+  type Author {
+    name: String!, bookCount: Int!
+  }
+  type AuthorMutation {
+    name: String!, born: Int!
+  }
+    
+  type Book {
+    title: String!
+    author: String!
+    published: Int!
+    genres: [String!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+    
+    addAuthor(
+      name: String!
+      born: Int
+    ): AuthorMutation
+
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): AuthorMutation
   }
 `
 
 const resolvers = {
   Query: {
     bookCount: () => books.length,
-    authorCount: () => authors.length
-    /* allPersons: () => persons,
-    findPerson: (root, args) =>
-      persons.find(p => p.name === args.name) */
+    authorCount: () => authors.length,
+    allAuthors: () => authors,
+    allBooks: (root, args) => {
+      let filteredBooks = books
+
+      if (args.genre) {
+        filteredBooks = filteredBooks.filter(book => 
+          args.genre.find(genre => book.genres.includes(genre))
+        )
+      }
+
+      if (args.author) {
+        filteredBooks = filteredBooks.filter(book =>
+          book.author.toLowerCase().includes(args.author.toLowerCase())
+        )
+      }
+
+      if (args.title) {
+        filteredBooks = filteredBooks.filter(book =>
+          book.title.toLowerCase().includes(args.title.toLowerCase())
+        )
+      }
+
+      return filteredBooks
+    }
+  },
+  Author: {
+    bookCount: (author) => {
+      return books.filter(book => book.author === author.name).length
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      
+      if (books.find(b => b.title === book.title)) {
+        throw new GraphQLError('Title must be unique', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+      
+      let existingAuthor = authors.find(a => a.name === book.author)
+      if (!existingAuthor) {
+        const newAuthor = { name: book.author, id: uuid() }
+        authors.push(newAuthor)
+      }
+
+      books = books.concat(book)
+      return book
+    },
+    addAuthor: (root, args) => {
+      const author = { ...args, id: uuid() }
+      
+      if (authors.some(a => a.name === author.name)) {
+        throw new GraphQLError('Name must be unique', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
+      }
+
+      authors = authors.concat(author)
+      return author
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find(p => p.name === args.name)
+      if (!author) {
+        return null
+      }
+  
+      const updatedAuthor = { ...author, born: args.setBornTo }
+      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
+      return updatedAuthor
+    } 
   }
 }
 
