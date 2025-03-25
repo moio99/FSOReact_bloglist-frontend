@@ -1,6 +1,6 @@
-const { ApolloServer } = require('@apollo/server')
-const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v4: uuid } = require('uuid');
+import { ApolloServer } from '@apollo/server'
+import { startStandaloneServer } from '@apollo/server/standalone'
+import { v4 as uuid } from 'uuid'
 
 let authors = [
   {
@@ -89,7 +89,7 @@ const typeDefs = `
   }
 
   type Author {
-    name: String!, bookCount: Int!
+    name: String!, born: Int, bookCount: Int!
   }
   type AuthorMutation {
     name: String!, born: Int!
