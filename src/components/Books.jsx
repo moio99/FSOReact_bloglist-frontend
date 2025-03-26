@@ -1,19 +1,18 @@
-import { gql, useQuery } from '@apollo/client';
-
-const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      author
-      published
-    }
-  }
-`
+import { useQuery } from '@apollo/client';
+import { useEffect } from 'react'
+import { ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
-  const { data, loading, error } = useQuery(ALL_BOOKS, {
+  const { data, loading, error, refetch } = useQuery(ALL_BOOKS, {
     skip: !props.show,
+    fetchPolicy: "network-only"
   })
+
+  useEffect(() => {
+    if (props.show) {
+      refetch()
+    }
+  }, [props.show, refetch])
 
   if (!props.show) {
     return null
