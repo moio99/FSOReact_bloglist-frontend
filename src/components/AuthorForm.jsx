@@ -14,10 +14,10 @@ const AuthorForm = ({ author, authorChange, setError }) => {
     }
   }, [result.data, setError])
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
 
-    changeNumber({ variables: { name: author.name, setBornTo: Number(born) } })
+    await changeNumber({ variables: { name: author.name, setBornTo: Number(born) } })
     setBorn('')
     authorChange()
   }
