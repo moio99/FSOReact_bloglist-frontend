@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
+// import { updateCache } from '../App'
 
 const ADD_BOOK = gql`
   mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
@@ -15,20 +17,25 @@ const ADD_BOOK = gql`
 `
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState('')
+  const [title, setTitle] = useState('Demons')
+  const [author, setAuthor] = useState('Fyodor Dostoevsky')
+  const [published, setPublished] = useState('1872')
   const [genre, setGenre] = useState('')
-  const [genres, setGenres] = useState([])
+  const [genres, setGenres] = useState(['classic', 'revolution'])
 
   const [addBook, { loading, error }] = useMutation(ADD_BOOK, {
     onCompleted: () => {
+      console.log('update000000000000')
       setTitle('')
       setAuthor('')
       setPublished('')
       setGenres([])
       setGenre('')
-    }
+    },
+    /* update: (cache, response) => {
+      console.log('update1111111111', response.data)
+      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
+    }, */
   })
 
   if (!props.show) {
@@ -56,9 +63,9 @@ const NewBook = (props) => {
       const bookAdded = await addBook({
         variables: {
           title,
-          author,
-          published: parseInt(published),
-          genres
+          author: author.length > 0 ? author : undefined,
+          published: genres.length > 0 ? parseInt(published) : undefined,
+          genres: genres.length > 0 ? genres : undefined
         }
       })
       console.log('bookAdded', bookAdded)

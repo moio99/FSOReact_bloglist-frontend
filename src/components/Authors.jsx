@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useQuery } from '@apollo/client'
 import { useEffect } from 'react'
 import AuthorForm from "./AuthorForm"
-import { ALL_PERSONS } from '../queries'
+import { ALL_AUTHORS } from '../queries'
 
-const Authors = ({show, setError}) => {
-  const { data, loading, error, refetch } = useQuery(ALL_PERSONS, {
+const Authors = ({show, setError, login}) => {
+  const { data, loading, error, refetch } = useQuery(ALL_AUTHORS, {
     skip: !show,
   })
   const [selectedAuthor, setSelectedAuthor] = useState(null)
@@ -26,6 +26,7 @@ const Authors = ({show, setError}) => {
   const handleAuthorClick = (author) => {
     setSelectedAuthor(author)
   }
+  
   const handleAuthorChange = () => {
     setSelectedAuthor(null)
   }
@@ -42,8 +43,9 @@ const Authors = ({show, setError}) => {
           </tr>
           {data?.allAuthors?.map((a) => (
             <tr key={a.name}>
-              <td onClick={() => handleAuthorClick(a)} 
-                style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>{a.name}</td>
+              {login && <td onClick={() => handleAuthorClick(a)} 
+                style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}>{a.name}</td>}
+              {!login && <td>{a.name}</td>}
               <td>{a.born || "N/A"}</td>
               <td>{a.bookCount}</td>
             </tr>

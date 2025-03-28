@@ -17,9 +17,17 @@ const AuthorForm = ({ author, authorChange, setError }) => {
   const submit = async (event) => {
     event.preventDefault()
 
-    await changeNumber({ variables: { name: author.name, setBornTo: Number(born) } })
-    setBorn('')
-    authorChange()
+    try {
+      await changeNumber({ variables: { 
+        name: author.name, 
+        setBornTo: born.length > 0 ? Number(born) : undefined 
+      } })
+      setBorn('')
+      authorChange()
+    } catch (err) {
+      console.error("Error on change born year:", err.message)
+      setError(err.message)
+    }
   }
 
   return (
