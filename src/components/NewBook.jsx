@@ -25,17 +25,12 @@ const NewBook = (props) => {
 
   const [addBook, { loading, error }] = useMutation(ADD_BOOK, {
     onCompleted: () => {
-      console.log('update000000000000')
       setTitle('')
       setAuthor('')
       setPublished('')
       setGenres([])
       setGenre('')
     },
-    /* update: (cache, response) => {
-      console.log('update1111111111', response.data)
-      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
-    }, */
   })
 
   if (!props.show) {

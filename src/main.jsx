@@ -14,7 +14,6 @@ const wsLink = new GraphQLWsLink(createClient({
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('booklist-user-token')
-  console.log('mainnnnnnnnnnnnnnnnnnnnnnnnnnnnn', token)
   return {
     headers: {
       ...headers,

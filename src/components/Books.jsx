@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { useEffect } from 'react'
 import { useMutation } from '@apollo/client'
 import { ALL_BOOKS, DELETE_BOOK } from '../queries'
@@ -7,10 +7,14 @@ import { ALL_BOOKS, DELETE_BOOK } from '../queries'
 const Books = ({ show, login }) => {
   const [uniqueGenres, setUniqueGenres] = useState([])
   const [selectedGenre, setSelectedGenre] = useState(null)
+  const client = useApolloClient()
 
   const { data, loading, error, refetch } = useQuery(ALL_BOOKS, {
+    variables: { genre: selectedGenre ? [selectedGenre] : null },
+    skip: !show,
+    fetchPolicy: "network-only",
     onCompleted: (data) => {
-      if (data && data.allBooks) {
+      if (selectedGenre === null && data && data.allBooks) {
         const genreSet = new Set()
         data.allBooks.forEach(book => {
           book.genres.forEach(genre => genreSet.add(genre))
@@ -19,19 +23,16 @@ const Books = ({ show, login }) => {
         const uniqueGenresList = Array.from(genreSet)
         setUniqueGenres(uniqueGenresList)
       }
-    },
-    skip: !show,
-    fetchPolicy: "network-only"
+    }
   })
 
   const [deleteBook] = useMutation(DELETE_BOOK, {
     refetchQueries: ['ALL_BOOKS'],
     onCompleted: () => {
-      console.log('delete livro 000000000000')
-      refetch() // Provoca que se volte a carregar o listado de livros
+      console.log('borrado do livro completado')
     },
     onError: (error) => {
-      console.error("Error al eliminar el libro:", error)
+      console.error("Erro ao eliminar o livro:", error)
     },
   })
 
@@ -50,14 +51,25 @@ const Books = ({ show, login }) => {
 
     try {
       const { data } = await deleteBook({ variables: { title } })
-      if (data.deleteBook) {
-        console.log(`Libro "${title}" eliminado correctamente.`)
+      if (data && data.deleteBook) {
+        console.log(`Livro "${title}" eliminado correctamente.`)
+        client.cache.modify({
+          fields: {
+            allBooks(existingBooks = []) {
+              return existingBooks.filter(book => book.title !== title)
+            }
+          }
+        })
       } else {
-        console.log("No se pudo eliminar el libro.")
+        console.log("Nom foi posível eliminar o livro.")
       }
     } catch (error) {
-      console.error("Error en la mutación:", error)
+      console.error("Erro na mutaçom:", error)
     }
+  }
+
+  const handleSelectedGenre = async (genre) => {
+    setSelectedGenre(genre)
   }
   
   const filteredBooks = selectedGenre
@@ -95,13 +107,13 @@ const Books = ({ show, login }) => {
       <div>
         <div>
           {uniqueGenres.map(genre => (
-            <button key={genre} onClick={() => setSelectedGenre(genre)}>
+            <button key={genre} onClick={() => handleSelectedGenre(genre)}>
               {genre}
             </button>
           ))}
         </div>
         <div>
-          <button onClick={() => setSelectedGenre(null)}>All genres</button>
+          <button onClick={() => handleSelectedGenre(null)}>All genres</button>
         </div>
       </div>
     </div>

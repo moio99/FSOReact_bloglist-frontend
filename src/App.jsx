@@ -8,6 +8,27 @@ import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
 import './index.css'
 
+
+/* export const updateCache = (cache, query, addedBook) => {
+  // helper that is used to eliminate saving same person twice
+  console.log('updateCache222222222222qqqqq', query)
+  console.log('updateCache222222222222', addedBook)
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.name
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBook }) => {
+    console.log('updateCache333333333333', allBook)
+    return {
+      allBook: uniqByName(allBook.concat(addedBook)),
+    }
+  })
+} */
+
 const App = () => {
   const [token, setToken] = useState(null)
   const [userGenre, setUserGenre] = useState('')
