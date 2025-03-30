@@ -1,33 +1,13 @@
 import { useState } from "react"
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import Recommendations from "./components/Recommendations"
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
+import { BOOK_ADDED } from './queries'
 import './index.css'
-
-
-/* export const updateCache = (cache, query, addedBook) => {
-  // helper that is used to eliminate saving same person twice
-  console.log('updateCache222222222222qqqqq', query)
-  console.log('updateCache222222222222', addedBook)
-  const uniqByName = (a) => {
-    let seen = new Set()
-    return a.filter((item) => {
-      let k = item.name
-      return seen.has(k) ? false : seen.add(k)
-    })
-  }
-
-  cache.updateQuery(query, ({ allBook }) => {
-    console.log('updateCache333333333333', allBook)
-    return {
-      allBook: uniqByName(allBook.concat(addedBook)),
-    }
-  })
-} */
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -56,6 +36,13 @@ const App = () => {
       setErrorMessage(null)
     }, 10000)
   }
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      console.log(data)
+      alert(`A new book ${data.data.bookAdded.title} has been added!`)
+    }
+  })
 
   return (
     <div>
