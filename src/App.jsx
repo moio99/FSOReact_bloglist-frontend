@@ -6,7 +6,7 @@ import NewBook from "./components/NewBook"
 import Recommendations from "./components/Recommendations"
 import Notify from './components/Notify'
 import LoginForm from './components/LoginForm'
-import { BOOK_ADDED } from './queries'
+import { BOOK_ADDED, ALL_BOOKS } from './queries'
 import './index.css'
 
 const App = () => {
@@ -15,6 +15,19 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)
   const client = useApolloClient()
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => 
+      set.map(b => b.id).includes(object.id)  
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+      })
+    }   
+  }
 
   const loginSuccess = (token, favoriteGenre) => {
     setToken(token)
@@ -41,6 +54,7 @@ const App = () => {
     onData: ({ data }) => {
       console.log(data)
       alert(`A new book ${data.data.bookAdded.title} has been added!`)
+      updateCacheWith(data.data.bookAdded)
     }
   })
 

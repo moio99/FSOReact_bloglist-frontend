@@ -22,7 +22,7 @@ const httpLink = createHttpLink({ uri: 'http://localhost:4000/' })
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:4000/graphql`,
   options: {
-    reconnect: true,
+    reconnect: true
   },
 })
 const splitLink = split(
